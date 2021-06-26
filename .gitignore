@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+__pycache__
+.vscode/
+*.py[cod]
+*.pyc
+# Django stuff:
+*.log
+*.dump
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+mariadb_data/
+pg_data/
+
+secrets.json
+
+docker/prod/
+
+prod.yml
+docker_comments.txt

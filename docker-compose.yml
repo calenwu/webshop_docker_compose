@@ -1,0 +1,44 @@
+version: '3.9'
+volumes:
+  pgdata:
+  static:
+services:
+  webshop: &webshop
+    build:
+      context: .
+      dockerfile: docker/dev/webshop/Dockerfile
+    depends_on:
+      - "postgres"
+      - "redis"
+    environment:
+      - DJANGO_SETTINGS_MODULE=webshop.settings.dev
+    volumes: 
+      - ./apps/webshop:/apps/webshop
+      - ./apps/webshop/media:/media/webshop
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
+			&& celery -A webshop worker --loglevel=info -f celery.log -c 9
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/dev/postgres/Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_DB=webshop
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./pg_data:/pg_data
+    ports:
+      - 5432:5432
+
+  redis:
+    build:
+      context: .
+      dockerfile: docker/dev/redis/Dockerfile
+    ports:
+      - 6379:6379
