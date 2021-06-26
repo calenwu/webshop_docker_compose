@@ -1,0 +1,3 @@
+[submodule "apps/webshop"]
+	path = apps/webshop
+	url = git@github.com:calenwu/webshop.git
