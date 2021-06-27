@@ -20,5 +20,4 @@ secrets.json
 
 docker/prod/
 
-prod.yml
 docker_comments.txt
