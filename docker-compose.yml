@@ -3,23 +3,6 @@ volumes:
   pgdata:
   static:
 services:
-  webshop: &webshop
-    build:
-      context: .
-      dockerfile: docker/dev/webshop/Dockerfile
-    depends_on:
-      - "postgres"
-      - "redis"
-    environment:
-      - DJANGO_SETTINGS_MODULE=webshop.settings.dev
-    volumes: 
-      - ./apps/webshop:/apps/webshop
-      - ./apps/webshop/media:/media/webshop
-    ports:
-      - 8000:8000
-    command: python manage.py runserver 0.0.0.0:8000
-      && celery -A webshop worker --loglevel=info -f celery.log -c 9
-
   postgres:
     build:
       context: .
@@ -42,3 +25,58 @@ services:
       dockerfile: docker/dev/redis/Dockerfile
     ports:
       - 6379:6379
+
+  webshop: &webshop
+    build:
+      context: .
+      dockerfile: docker/dev/webshop/Dockerfile
+    depends_on:
+      - "postgres"
+      - "redis"
+    environment:
+      - DJANGO_SETTINGS_MODULE=webshop.settings.dev
+    volumes:
+      - ./apps/webshop:/apps/webshop
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
+
+  celery_worker_webshop:
+    <<: *webshop
+    command: celery -A webshop worker --loglevel=info -f celery.log -c 9
+    ports: []
+
+  calen_blog: &calen_blog
+    build:
+      context: .
+      dockerfile: docker/dev/calen_blog/Dockerfile
+    depends_on:
+      - "postgres"
+      - "redis"
+    environment:
+      - DJANGO_SETTINGS_MODULE=calen_blog.settings.dev
+    volumes:
+      - ./apps/calen_blog:/apps/calen_blog
+    ports:
+      - "8001:8001"
+    command: python manage.py runserver 0.0.0.0:8001
+
+  celery_worker_calen_blog:
+    <<: *calen_blog
+    command: celery -A calen_blog worker --loglevel=info -f celery.log -c 9
+    ports: []
+
+  zum_goldenen_panda: &zum_goldenen_panda
+    build:
+      context: .
+      dockerfile: docker/dev/zum_goldenen_panda/Dockerfile
+    depends_on:
+      - "postgres"
+      - "redis"
+    environment:
+      - DJANGO_SETTINGS_MODULE=zum_goldenen_panda.settings.dev
+    volumes:
+      - ./apps/zum_goldenen_panda:/apps/zum_goldenen_panda
+    ports:
+      - 8002:8002
+    command: python manage.py runserver 0.0.0.0:8002

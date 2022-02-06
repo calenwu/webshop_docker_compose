@@ -1,3 +1,11 @@
 [submodule "apps/webshop"]
 	path = apps/webshop
 	url = git@github.com:calenwu/webshop.git
+
+[submodule "apps/calen_blog"]
+	path = apps/calen_blog
+	url = git@gitlab.com:calenwu/calen-blog.git
+
+[submodule "apps/zum_goldenen_panda"]
+	path = apps/zum_goldenen_panda
+	url = git@gitlab.com:calenwu/zum-goldenen-panda.git

@@ -1,15 +1,16 @@
 FROM python:3.9.5
 
-COPY ./apps/webshop /apps/webshop
+COPY ./apps/webshop/requirements /apps/webshop/requirements
 WORKDIR /apps/webshop
+RUN pip3 install -r /apps/webshop/requirements/dev.txt
+
+COPY ./apps/webshop /apps/webshop
 
 RUN apt update
 RUN apt install -y fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatspi2.0-0 libgtk-3-0 libnspr4 libnss3 libx11-xcb1 libxtst6 xdg-utils wkhtmltopdf gettext
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN dpkg -i google-chrome-stable_current_amd64.deb
-
-RUN pip3 install -r /apps/webshop/requirements/dev.txt
 
 COPY ./docker/dev/webshop/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
